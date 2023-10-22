@@ -70,6 +70,12 @@ const App: React.FC = () => {
     );
   };
 
+  const handleGuessNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage("");
+    setMode2(false);
+    setUserGuess(e.target.value);
+  };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     setStateFn: React.Dispatch<React.SetStateAction<string>>,
@@ -90,14 +96,8 @@ const App: React.FC = () => {
     handleInputChange(e, setUserThink, setMessage);
   };
 
-  const handleYourGuessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleModeTwoGuessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleInputChange(e, setYourGuess, setMessageModeTwo);
-  };
-
-  const handleGuessNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage("");
-    setMode2(false);
-    setUserGuess(e.target.value);
   };
 
   // Create a function to toggle the visibility
@@ -148,7 +148,7 @@ const App: React.FC = () => {
           <input
             type="number"
             value={yourGuess}
-            onChange={handleYourGuessChange}
+            onChange={handleModeTwoGuessChange}
             placeholder="Enter your guess"
           />
           <h3>{messageModeTwo}</h3>
