@@ -95,7 +95,3 @@ Given more time, here are some potential improvements that could be made to the 
 3. Advanced Computer Player:
 
 - In Mode 2, enhance the computer-generated number by implementing various algorithms to make it smarter and more challenging for the player.
-
-### Screenshot
-
-![Screenshot](screenshot.png)
