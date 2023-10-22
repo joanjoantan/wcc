@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 
-import { generateRandomNumber, checkNumber } from "./utils/Features";
-import { messageCongratulations } from "./utils/Messages";
+import { generateRandomNumber } from "./utils/Features";
+import {
+  messageInvalid,
+  messageTooHigh,
+  messageTooLow,
+  messageCongratulations,
+} from "./utils/Messages";
 
 const App: React.FC = () => {
   const minNumber = 1;
@@ -23,7 +28,7 @@ const App: React.FC = () => {
   // Mode 2: Define a state variable to track the visibility of the computerMysteryNumber
   const [isTextVisible, setIsTextVisible] = useState(false);
 
-  const handleGuess = () => {
+  const handleSubmitGuess = () => {
     if (Mode2) {
       handleModeTwoGuess();
     } else {
@@ -31,28 +36,38 @@ const App: React.FC = () => {
     }
   };
 
-  const handleModeOneGuess = () => {
-    const guess = parseInt(userGuess, 10);
-    const think = parseInt(userThink, 10);
+  const compareValue = (
+    guess: string,
+    think: string,
+    specialMessage: string,
+    setMessageFn: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    const guessValue = parseInt(guess, 10);
+    const thinkValue = parseInt(think, 10);
 
-    const specialMessage = "user thinks number";
-
-    const result = checkNumber(guess, think, specialMessage);
-    setMessage(result);
-
-    if (result.includes(messageCongratulations)) {
+    if (isNaN(guessValue)) {
+      setMessageFn(messageInvalid);
+    } else if (guessValue === thinkValue) {
+      setMessageFn(`${messageCongratulations} ${specialMessage} ${think}!`);
       setMode2(true);
+    } else if (guessValue < thinkValue) {
+      setMessageFn(messageTooLow);
+    } else {
+      setMessageFn(messageTooHigh);
     }
   };
 
+  const handleModeOneGuess = () => {
+    compareValue(userGuess, userThink, "user thinks number", setMessage);
+  };
+
   const handleModeTwoGuess = () => {
-    const guess = parseInt(yourGuess, 10);
-    const think = computerMysteryNumber;
-
-    const specialMessage = "computer random number";
-
-    const result = checkNumber(guess, think, specialMessage);
-    setMessageModeTwo(result);
+    compareValue(
+      yourGuess,
+      computerMysteryNumber.toString(),
+      "computer random number",
+      setMessageModeTwo
+    );
   };
 
   const handleInputChange = (
@@ -116,7 +131,7 @@ const App: React.FC = () => {
 
       <h3>{message}</h3>
 
-      <button onClick={handleGuess}>Submit Guess</button>
+      <button onClick={handleSubmitGuess}>Submit Guess</button>
 
       <hr />
 
@@ -124,11 +139,9 @@ const App: React.FC = () => {
         <>
           <h2>Mode 2</h2>
           <p>
-            The computer generates a random number{" "}
-            <button onClick={toggleTextVisibility}>
-              Toggle computer mystery number
-            </button>{" "}
-            {isTextVisible && <i>{computerMysteryNumber}</i>}, you guess a
+            The computer generates a random number (
+            <i onClick={toggleTextVisibility}>toggle computer mystery number</i>
+            {isTextVisible && <b> - {computerMysteryNumber}</b>}), you guess a
             number between {minNumber} and {maxNumber}:
           </p>
           You guess a number:{" "}
@@ -139,7 +152,7 @@ const App: React.FC = () => {
             placeholder="Enter your guess"
           />
           <h3>{messageModeTwo}</h3>
-          <button onClick={handleGuess}>Submit Guess</button>
+          <button onClick={handleSubmitGuess}>Submit Guess</button>
         </>
       )}
     </div>
